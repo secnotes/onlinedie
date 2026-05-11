@@ -1,0 +1,502 @@
+/* 样式文件 */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: #e0e0e0;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    padding: 30px 0;
+}
+
+h1 {
+    font-size: 2.5em;
+    margin: 0;
+    color: #4ecca3;
+}
+
+.subtitle {
+    color: #888;
+    margin-top: 10px;
+}
+
+main {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 30px;
+    margin-top: 20px;
+}
+
+/* 上传区域 */
+.upload-area {
+    border: 2px dashed #4ecca3;
+    border-radius: 12px;
+    padding: 50px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.upload-area:hover,
+.upload-area.dragover {
+    background: rgba(78, 204, 163, 0.1);
+    border-color: #6ee7b7;
+}
+
+.upload-icon {
+    font-size: 4em;
+    margin-bottom: 20px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #4ecca3 0%, #38a169 100%);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn-primary:hover {
+    transform: scale(1.05);
+}
+
+/* 文件信息 */
+.file-info {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.filename {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #fff;
+}
+
+.filesize {
+    color: #888;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-item label {
+    font-size: 0.85em;
+    color: #888;
+    margin-bottom: 5px;
+}
+
+.hash-value {
+    font-family: monospace;
+    font-size: 0.85em;
+    color: #4ecca3;
+    word-break: break-all;
+}
+
+/* 结果区域 */
+.results {
+    margin-top: 30px;
+}
+
+.results h2 {
+    color: #4ecca3;
+    margin-bottom: 20px;
+}
+
+.result-section {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.result-section h3 {
+    color: #fff;
+    margin: 0 0 15px 0;
+    font-size: 1em;
+}
+
+.result-content {
+    color: #e0e0e0;
+}
+
+.result-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.result-label {
+    font-weight: bold;
+    color: #fff;
+    font-size: 1.5em;
+}
+
+.result-value {
+    color: #888;
+}
+
+.result-type {
+    background: #4ecca3;
+    color: #1a1a2e;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.result-platform {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px 12px;
+    border-radius: 4px;
+}
+
+.result-arch {
+    background: rgba(255, 193, 7, 0.2);
+    color: #ffc107;
+    padding: 4px 12px;
+    border-radius: 4px;
+}
+
+/* 结果标签 - 与格式标签保持区分 */
+.result-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 4px;
+    margin: 4px;
+    font-size: 0.9em;
+}
+
+/* 编译器/链接器 - 蓝紫色 */
+.result-tag.compiler {
+    background: rgba(99, 102, 241, 0.85);
+    color: #ffffff;
+}
+
+/* 打包器/保护器 - 橙红色 */
+.result-tag.packer {
+    background: rgba(239, 68, 68, 0.85);
+    color: #ffffff;
+}
+
+/* 库/框架 - 青色 */
+.result-tag.library {
+    background: rgba(6, 182, 212, 0.85);
+    color: #ffffff;
+}
+
+/* 可折叠区域 */
+.collapsible-section {
+    margin: 15px 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.collapsible-header {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    background: rgba(78, 204, 163, 0.1);
+    cursor: pointer;
+    transition: background 0.2s;
+    user-select: none;
+}
+
+.collapsible-header:hover {
+    background: rgba(78, 204, 163, 0.2);
+}
+
+.collapse-icon {
+    color: #4ecca3;
+    margin-right: 10px;
+    font-size: 0.8em;
+    transition: transform 0.2s;
+}
+
+.collapse-title {
+    color: #fff;
+    font-weight: 500;
+}
+
+.collapsible-content {
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* 信息表格 */
+.info-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+}
+
+.info-table th {
+    background: rgba(78, 204, 163, 0.15);
+    color: #4ecca3;
+    padding: 10px 8px;
+    text-align: left;
+    font-weight: 500;
+    border-bottom: 2px solid rgba(78, 204, 163, 0.3);
+}
+
+.info-table td {
+    padding: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    vertical-align: top;
+}
+
+.info-table tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+/* 特殊单元格样式 */
+.section-name {
+    color: #ffc107;
+    font-weight: 500;
+}
+
+.section-flags {
+    font-size: 0.85em;
+    color: #888;
+}
+
+.ph-type {
+    color: #4ecca3;
+    font-weight: 500;
+}
+
+.ph-flags {
+    font-size: 0.85em;
+}
+
+.dyn-tag {
+    color: #f093fb;
+    font-weight: 500;
+}
+
+.file-name {
+    color: #fff;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.more-files {
+    color: #888;
+    text-align: center;
+    font-style: italic;
+}
+
+.note-data {
+    font-family: monospace;
+    font-size: 0.85em;
+    color: #888;
+}
+
+/* Needed Libraries 列表 */
+.needed-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.needed-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: #fff;
+}
+
+/* 详细信息表格 */
+.detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.detail-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.detail-key {
+    color: #888;
+    width: 35%;
+    font-weight: 500;
+}
+
+.detail-value {
+    color: #fff;
+}
+
+/* 字符串列表 */
+.strings-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.string-item {
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    gap: 15px;
+}
+
+.string-offset {
+    color: #888;
+    font-family: monospace;
+    font-size: 0.8em;
+    min-width: 70px;
+}
+
+.string-value {
+    color: #e0e0e0;
+    font-family: monospace;
+    font-size: 0.85em;
+    word-break: break-all;
+}
+
+/* 导入列表 */
+.imports-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.import-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    color: #fff;
+}
+
+/* 加载动画 */
+.loading {
+    text-align: center;
+    padding: 50px;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(78, 204, 163, 0.3);
+    border-top: 4px solid #4ecca3;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 页脚 */
+footer {
+    text-align: center;
+    padding: 30px 0;
+    color: #888;
+}
+
+footer a {
+    color: #4ecca3;
+}
+
+/* 响应式设计 */
+@media (max-width: 600px) {
+    .container {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    .upload-area {
+        padding: 30px;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .result-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .info-table {
+        font-size: 0.8em;
+    }
+
+    .info-table th,
+    .info-table td {
+        padding: 6px 4px;
+    }
+
+    .file-name {
+        max-width: 150px;
+    }
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #4ecca3;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #38a169;
+}
