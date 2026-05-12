@@ -32,16 +32,16 @@
 
 [data-theme="light"] {
     --bg-color: #f5f5f5;
-    --bg-gradient-1: #ffffff;
-    --bg-gradient-2: #f0f0f0;
+    --bg-gradient-1: #f0f2f5;
+    --bg-gradient-2: #e8eaed;
     --text-color: #333;
     --text-secondary: #666;
     --primary-color: #38a169;
     --primary-hover: #2d8a5c;
-    --border-color: rgba(56, 161, 105, 0.3);
-    --card-bg: rgba(255, 255, 255, 0.8);
-    --card-bg-hover: rgba(56, 161, 105, 0.1);
-    --table-bg: rgba(255, 255, 255, 0.9);
+    --border-color: rgba(56, 161, 105, 0.4);
+    --card-bg: rgba(255, 255, 255, 0.95);
+    --card-bg-hover: rgba(56, 161, 105, 0.08);
+    --table-bg: #fafbfc;
     --table-header-bg: rgba(56, 161, 105, 0.1);
     --error-bg: rgba(239, 68, 68, 0.1);
     --error-border: rgba(239, 68, 68, 0.4);
@@ -203,6 +203,8 @@ main {
     border-radius: 12px;
     padding: 30px;
     margin-top: 20px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
 }
 
 /* 上传区域 */
@@ -247,6 +249,7 @@ main {
     border-radius: 8px;
     padding: 20px;
     margin-top: 20px;
+    border: 1px solid var(--border-color);
 }
 
 .info-header {
@@ -305,6 +308,7 @@ main {
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 20px;
+    border: 1px solid var(--border-color);
 }
 
 .result-section h3 {

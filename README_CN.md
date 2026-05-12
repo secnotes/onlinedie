@@ -7,7 +7,7 @@
 [![Qt](https://img.shields.io/badge/Qt-6.11.1-green.svg)](https://doc.qt.io/qt-6/wasm.html)
 [![Emscripten](https://img.shields.io/badge/Emscripten-4.0.7-purple.svg)](https://emscripten.org/)
 [![Signatures](https://img.shields.io/badge/Signatures-800+-red.svg)](#签名覆盖)
-[![Demo](https://img.shields.io/badge/Demo-GitHub%20Pages-brightgreen.svg)](https://pages.github.com/)
+[![Demo](https://img.shields.io/badge/Demo-Live-brightgreen.svg)](https://secnotes.github.io/onlinedie/)
 
 **[Detect It Easy](https://github.com/horsicq/DIE-engine) 编译为 WebAssembly，完全在浏览器中运行。**
 
