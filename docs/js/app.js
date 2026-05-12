@@ -17,8 +17,8 @@ async function initEngine() {
 
     if (!window.dieWasmInit) {
         statusIndicator.textContent = '❌';
-        statusText.textContent = 'WASM 加载器未找到';
-        showError('WASM 模块加载失败，请刷新页面');
+        statusText.textContent = i18n.t('wasm-fail');
+        showError(i18n.t('wasm-fail'));
         return;
     }
 
@@ -29,20 +29,20 @@ async function initEngine() {
             dieModule = window.dieModule;
             engineReady = true;
             statusIndicator.textContent = '🚀';
-            statusText.textContent = '完整 DIE 引擎已就绪';
+            statusText.textContent = i18n.t('wasm-ready');
             statusIndicator.className = 'status-indicator wasm-active';
             console.log('完整 DIE WASM 已就绪');
             console.log('FS available:', dieModule.FS ? 'yes' : 'no');
             console.log('callMain available:', dieModule.callMain ? 'yes' : 'no');
         } else {
-            throw new Error('初始化失败');
+            throw new Error(i18n.t('wasm-fail'));
         }
     } catch (error) {
         console.error('引擎初始化失败:', error);
         statusIndicator.textContent = '❌';
-        statusText.textContent = 'WASM 加载失败';
+        statusText.textContent = i18n.t('wasm-fail');
         statusIndicator.className = 'status-indicator error';
-        showError('WASM 模块加载失败: ' + error.message);
+        showError(i18n.t('wasm-error') + ': ' + error.message);
     }
 }
 
@@ -71,7 +71,7 @@ function formatSize(bytes) {
 // 使用完整 DIE WASM 检测文件
 function wasmDetect(buffer, format = 'text') {
     if (!engineReady || !dieModule) {
-        throw new Error('WASM 未初始化');
+        throw new Error(i18n.t('engine-init'));
     }
 
     // 重置全局输出缓冲区
@@ -149,9 +149,9 @@ function displayResults(textOutput) {
     document.getElementById('results').style.display = 'block';
 
     if (!textOutput || textOutput.length === 0) {
-        document.getElementById('formatResult').innerHTML = '<div class="result-item"><span class="result-label">无输出</span></div>';
+        document.getElementById('formatResult').innerHTML = '<div class="result-item"><span class="result-label">' + i18n.t('no-output') + '</span></div>';
         document.getElementById('rawOutputSection').style.display = 'block';
-        document.getElementById('rawOutput').innerHTML = '<pre>检测无结果</pre>';
+        document.getElementById('rawOutput').innerHTML = '<pre>' + i18n.t('detect-fail') + '</pre>';
         return;
     }
 
@@ -230,7 +230,7 @@ async function handleFile(file) {
 
     try {
         if (!engineReady) {
-            throw new Error('WASM 引擎未初始化');
+            throw new Error(i18n.t('engine-init'));
         }
 
         const buffer = await file.arrayBuffer();
@@ -273,7 +273,7 @@ async function handleFile(file) {
 
     } catch (error) {
         console.error('检测失败:', error);
-        showError('检测失败: ' + error.message);
+        showError(i18n.t('detect-error') + ': ' + error.message);
     }
 
     loading.style.display = 'none';
