@@ -35,6 +35,48 @@ h1 {
     margin-top: 10px;
 }
 
+/* 引擎状态指示器 */
+.engine-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px 16px;
+    border-radius: 20px;
+    margin-top: 10px;
+    font-size: 0.9em;
+}
+
+.status-indicator {
+    font-size: 1.2em;
+}
+
+.status-indicator.wasm-active {
+    animation: pulse-green 2s infinite;
+}
+
+.status-indicator.js-active {
+    animation: pulse-blue 2s infinite;
+}
+
+.status-indicator.basic-active {
+    color: #ffc107;
+}
+
+.status-indicator.error {
+    color: #ef4444;
+}
+
+@keyframes pulse-green {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+@keyframes pulse-blue {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
 main {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 12px;
@@ -148,6 +190,47 @@ main {
     color: #fff;
     margin: 0 0 15px 0;
     font-size: 1em;
+}
+
+/* 带按钮的节标题 */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.section-header h3 {
+    margin: 0;
+}
+
+/* 格式按钮组 */
+.format-buttons {
+    display: flex;
+    gap: 4px;
+}
+
+/* 小按钮 */
+.btn-small {
+    background: rgba(78, 204, 163, 0.15);
+    color: #4ecca3;
+    border: 1px solid rgba(78, 204, 163, 0.3);
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-small:hover {
+    background: rgba(78, 204, 163, 0.25);
+    border-color: #4ecca3;
+}
+
+.btn-small.active {
+    background: rgba(78, 204, 163, 0.35);
+    border-color: #4ecca3;
+    font-weight: 500;
 }
 
 .result-content {
@@ -499,4 +582,35 @@ footer a {
 
 ::-webkit-scrollbar-thumb:hover {
     background: #38a169;
+}
+
+/* 错误消息 */
+.error-message {
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.5);
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin-top: 20px;
+    color: #ef4444;
+}
+
+.error-message p {
+    margin: 0;
+    font-size: 0.95em;
+}
+
+/* 原始输出样式 */
+.raw-output {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    padding: 10px;
+    font-family: monospace;
+    font-size: 0.85em;
+    overflow-x: auto;
+    white-space: pre-wrap;
+}
+
+.raw-output pre {
+    margin: 0;
+    color: #e0e0e0;
 }

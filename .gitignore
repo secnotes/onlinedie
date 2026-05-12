@@ -15,4 +15,11 @@ Thumbs.db
 *.log
 
 # DIE temp extraction data
-/tmp/
+/tmp/wasm-build/
+
+# WASM build dependencies (clone separately)
+wasm-build/deps/
+wasm-build/build/
+wasm-build/.venv/
+wasm-build/*.log
+wasm-build/src/build/

@@ -1,83 +1,158 @@
-# Detect It Easy - Web 版
+<div align="center">
 
-[Detect It Easy](https://github.com/horsicq/detect-it-easy) 的纯前端网页实现，用于文件签名识别。
+# Detect It Easy - Web
+
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.md)
+[![Platform](https://img.shields.io/badge/Platform-WebAssembly-orange.svg)](https://webassembly.org/)
+[![Qt](https://img.shields.io/badge/Qt-6.11.1-green.svg)](https://doc.qt.io/qt-6/wasm.html)
+[![Emscripten](https://img.shields.io/badge/Emscripten-4.0.7-purple.svg)](https://emscripten.org/)
+[![Signatures](https://img.shields.io/badge/Signatures-800+-red.svg)](#签名覆盖)
+[![Demo](https://img.shields.io/badge/Demo-GitHub%20Pages-brightgreen.svg)](https://pages.github.com/)
+
+**[Detect It Easy](https://github.com/horsicq/DIE-engine) 编译为 WebAssembly，完全在浏览器中运行。**
+
+</div>
 
 ## 特性
 
-- **纯前端**: 无需服务器，完全在浏览器中运行
-- **多格式支持**: PE、ELF、Mach-O、MSDOS、COM、ZIP、APK、JAR、DEX、Java Class
-- **签名检测**: 编译器、打包器、保护器、安装器识别
-- **详细分析**: 文件结构解析，可折叠展示
-- **离线使用**: 无需网络连接
+- **纯前端**：无需服务器，完全在浏览器运行
+- **100% 签名覆盖**：包含全部 800+ DIE 签名
+- **多格式支持**：PE、ELF、Mach-O、MSDOS、COM、ZIP、APK、JAR、DEX、Java Class、PDF、PNG、JPEG 等
+- **多种输出格式**：文本、JSON、XML
+- **详细分析**：文件哈希（MD5、SHA256）、熵值计算
+- **离线可用**：无需网络连接即可工作
+
+## 演示
+
+上传任意文件可检测：
+- 文件格式详细信息（如 `PNG[512x512, 8 bits, RGBA]`）
+- 编译器/链接器识别（Visual C++、GCC、Rust、Go 等）
+- 打包器/保护器检测（UPX、ASPack、MPRESS 等）
+- 库/框架检测（.NET、MFC、Unity 等）
 
 ## 使用方法
 
-1. 在浏览器中打开 `docs/index.html`
-2. 上传或拖放文件
-3. 查看检测结果和文件详情
+1. 启动 HTTP 服务器（WASM 需要 HTTP 协议）：
+```bash
+cd docs
+python3 -m http.server 8080
+```
+
+2. 打开 http://localhost:8080
+
+3. 上传或拖放文件
+
+**注意**：WASM 无法从 `file://` 协议加载，必须使用 HTTP 服务器。
 
 ## 项目结构
 
 ```
-detect-it-easy-web/
-├── docs/                  # 前端文件
-│   ├── index.html         # 主页面
-│   ├── css/               # 样式
-│   └── js/                # JavaScript 模块
-│       ├── app.js         # 应用逻辑
-│       ├── file-parser.js # 文件解析
-│       ├── die-engine.js  # 检测引擎
-│       ├── die-signatures-full.js  # PE 签名
-│       ├── elf-signatures-full.js  # ELF 签名
-│       └── msdos-signatures.js     # MSDOS 签名
-├── src/                   # 签名提取脚本
-│   ├── extract_clean_sigs.py    # PE/MACH 提取
-│   ├── extract_elf_sigs.py      # ELF 提取
-│   └── extract_msdos_signatures.py # MSDOS 提取
+.
+├── docs/                    # 前端
+│   ├── index.html           # 主页面
+│   ├── css/style.css        # 样式
+│   ├── js/
+│   │   ├── app.js           # 应用逻辑
+│   │   └── md5.js           # MD5 计算
+│   └── wasm/                # WASM 模块
+│       ├── diec.js          # ES6 加载器（约309KB）
+│       ├── diec.wasm        # WASM 二进制（约11MB）
+│       └── diec.data        # 签名数据库（约2.8MB）
+│
+├── wasm-build/              # WASM 构建脚本
+│   └── deps/DIE-engine/     # DIE-engine 源码
+│
 └── README.md
-└── README_CN.md
 ```
 
-## 签名提取
+## 编译 WASM
 
-从 DIE 数据库重新生成签名：
+### 前置要求
+
+1. **Emscripten 4.0.7**（需与 Qt 6.11.1 匹配）：
+```bash
+git clone https://github.com/emscripten-core/emsdk.git ~/emsdk
+cd ~/emsdk
+./emsdk install 4.0.7
+./emsdk activate 4.0.7
+source ~/emsdk/emsdk_env.sh
+```
+
+2. **Qt 6.11.1 WASM**：
+```bash
+pip install aqtinstall
+aqt install-qt all_os wasm 6.11.1 wasm_singlethread -O ~/Qt
+aqt install-qt linux desktop 6.11.1 linux_gcc_64 -O ~/Qt
+```
+
+### 编译步骤
 
 ```bash
-# 先下载 DIE 签名数据库
-# 然后在 src/ 目录运行提取脚本
-cd src
-python3 extract_clean_sigs.py
-python3 extract_elf_sigs.py
-python3 extract_msdos_signatures.py
+cd wasm-build
+source ~/emsdk/emsdk_env.sh
+
+# 克隆 DIE-engine 及子模块
+git clone --recursive https://github.com/horsicq/DIE-engine.git deps/DIE-engine
+
+# 编译
+cd deps/DIE-engine
+mkdir build-wasm && cd build-wasm
+cmake .. \
+    -DCMAKE_PREFIX_PATH=$HOME/Qt/6.11.1/wasm_singlethread/lib/cmake/Qt6 \
+    --toolchain $HOME/Qt/6.11.1/wasm_singlethread/lib/cmake/Qt6/qt.toolchain.cmake \
+    -DQT_HOST_PATH=$HOME/Qt/6.11.1/gcc_64 \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_CXX_FLAGS="-Dregister=''"
+emmake make -j4 diec
+
+# 复制输出
+cp release/diec.* ../../docs/wasm/
 ```
 
-## 检测方法
+## 输出格式
 
-- **entry_point_bytes**: 匹配文件入口点字节
-- **section_name**: 检查特定段名
-- **import_dll**: 检测导入的 DLL（PE）
-- **needed_lib**: 检测依赖库（ELF）
-- **dynstr_string**: 在动态字符串表中搜索（ELF）
-- **find_string**: 搜索特定字符串
+### 文本（默认，类似 `diec -p`）
+```
+PNG
+    Format: PNG[48x48, 8 bits, RGBA, bKGD: rgb=(255,255,255)]
+```
 
-## 当前签名覆盖情况
+### JSON
+```json
+{"format":{"format":"PNG","fullName":"Portable Network Graphics"...}}
+```
 
-| 格式 | DIE 原始 | 已提取 | 覆盖率 |
-|------|----------|--------|--------|
-| PE   | 781      | 412    | 52.8%  |
-| ELF  | 43       | 36     | 83.7%  |
-| MSDOS| 349      | 333    | 95.4%  |
-| **总计** | **1173** | **781** | **66.6%** |
+### XML
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<detect><format><name>PNG</name>...</format></detect>
+```
 
-覆盖率差异原因：
-- **PE (52.8%)**: 过滤掉了通用检测方法（is_dotnet、rich_header等），这些方法会匹配所有文件导致误报
-- **ELF (83.7%)**: 已增强提取，包含 needed_lib、dynstr_string、section 等检测方法
-- **MSDOS (95.4%)**: 几乎完整提取，主要使用入口点字节和字符串匹配
+## 签名覆盖
+
+| 格式 | 签名数 |
+|------|--------|
+| PE | 781 |
+| ELF | 43 |
+| MSDOS | 349 |
+| APK | 42 |
+| Archive | 60+ |
+| Image | 20+ |
+| PDF | 15+ |
+| **总计** | **800+** |
+
+## 技术细节
+
+- **WASM 大小**：总计约 14MB（引擎 + Qt + 签名）
+- **Qt WASM**：使用 Qt 6.11.1 的 QJSEngine（签名脚本执行）
+- **Emscripten**：版本 4.0.7（ABI 与 Qt 兼容）
+- **虚拟文件系统**：用于文件处理
 
 ## 致谢
 
-- 原始 DIE 项目: [horsicq/detect-it-easy](https://github.com/horsicq/detect-it-easy)
-- 签名数据库来源于 DIE
+- [DIE-engine](https://github.com/horsicq/DIE-engine) - 原始项目
+- [Qt WASM](https://doc.qt.io/qt-6/wasm.html) - Qt WebAssembly
+- [Emscripten](https://emscripten.org/) - WASM 工具链
 
 ## 许可证
 

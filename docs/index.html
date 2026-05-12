@@ -10,7 +10,11 @@
     <div class="container">
         <header>
             <h1>🔍 Detect It Easy - Web</h1>
-            <p class="subtitle">纯前端文件类型识别工具 | 基于签名检测</p>
+            <p class="subtitle">基于 DIE-engine WASM 的文件检测工具</p>
+            <div class="engine-status" id="engineStatus">
+                <span class="status-indicator" id="statusIndicator">⏳</span>
+                <span id="statusText">正在加载 WASM...</span>
+            </div>
         </header>
 
         <main>
@@ -67,14 +71,16 @@
                     <div class="result-content" id="libraryResult"></div>
                 </div>
 
-                <div class="result-section" id="detailSection" style="display: none;">
-                    <h3>📄 详细信息</h3>
-                    <div class="result-content" id="detailResult"></div>
-                </div>
-
-                <div class="result-section" id="stringsSection" style="display: none;">
-                    <h3>📝 可打印字符串</h3>
-                    <div class="result-content strings-content" id="stringsResult"></div>
+                <div class="result-section" id="rawOutputSection" style="display: none;">
+                    <div class="section-header">
+                        <h3>📄 原始输出</h3>
+                        <div class="format-buttons">
+                            <button class="btn-small active" id="btnText" onclick="switchOutputFormat('text')">Text</button>
+                            <button class="btn-small" id="btnJson" onclick="switchOutputFormat('json')">JSON</button>
+                            <button class="btn-small" id="btnXml" onclick="switchOutputFormat('xml')">XML</button>
+                        </div>
+                    </div>
+                    <div class="result-content raw-output" id="rawOutput"></div>
                 </div>
             </div>
 
@@ -82,21 +88,72 @@
                 <div class="spinner"></div>
                 <p>正在分析文件...</p>
             </div>
+
+            <div class="error-message" id="errorMessage" style="display: none;">
+                <p id="errorText"></p>
+            </div>
         </main>
 
         <footer>
-            <p>基于 <a href="https://github.com/horsicq/detect-it-easy" target="_blank">Detect It Easy</a> 的签名库 | 纯前端实现</p>
+            <p>基于 <a href="https://github.com/horsicq/DIE-engine" target="_blank">DIE-engine</a> 编译为 WebAssembly</p>
         </footer>
     </div>
 
+    <!-- WASM 加载 -->
+    <script>
+        // 检测是否是 file:// 协议
+        const isLocalFile = window.location.protocol === 'file:';
+
+        // 全局输出缓冲区
+        window.dieOutputBuffer = '';
+
+        window.dieWasmInit = async function() {
+            const statusText = document.getElementById('statusText');
+            const statusIndicator = document.getElementById('statusIndicator');
+            const errorDiv = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+
+            if (isLocalFile) {
+                statusText.textContent = '本地模式 - 请通过 HTTP 访问';
+                statusIndicator.textContent = '⚠️';
+                statusIndicator.className = 'status-indicator basic-active';
+                errorDiv.style.display = 'block';
+                errorText.textContent = 'WASM 需要 HTTP 协议。请在 docs 目录运行:\npython3 -m http.server 8080\n然后访问 http://localhost:8080';
+                return false;
+            }
+
+            try {
+                const moduleUrl = './wasm/diec.js';
+                const createDieModule = await import(moduleUrl);
+
+                const module = await createDieModule.default({
+                    locateFile: (path) => `./wasm/${path}`,
+                    noCanvasRuntime: true,
+                    print: (text) => {
+                        window.dieOutputBuffer += text + '\n';
+                        console.log('DIE out:', text);
+                    },
+                    printErr: (text) => {
+                        console.error('DIE err:', text);
+                    }
+                });
+
+                window.dieModule = module;
+                console.log('完整 DIE WASM 加载成功');
+                console.log('Module has FS:', !!module.FS);
+                console.log('Module has callMain:', !!module.callMain);
+                return true;
+            } catch (e) {
+                console.error('WASM 加载失败:', e);
+                errorDiv.style.display = 'block';
+                errorText.textContent = 'WASM 加载失败: ' + e.message;
+                return false;
+            }
+        };
+    </script>
+
+    <!-- 应用逻辑 -->
     <script src="js/md5.js"></script>
-    <script src="js/signatures.js"></script>
-    <script src="js/die-signatures.js"></script>
-    <script src="js/die-signatures-full.js"></script>
-    <script src="js/msdos-signatures.js"></script>
-    <script src="js/elf-signatures-full.js"></script>
-    <script src="js/file-parser.js"></script>
-    <script src="js/die-engine.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
