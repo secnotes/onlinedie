@@ -17,7 +17,8 @@ async function initEngine() {
 
     if (!window.dieWasmInit) {
         statusIndicator.textContent = '❌';
-        statusText.textContent = i18n.t('wasm-fail');
+        window.setStatus('wasm-fail');
+        statusIndicator.className = 'status-indicator error';
         showError(i18n.t('wasm-fail'));
         return;
     }
@@ -29,7 +30,7 @@ async function initEngine() {
             dieModule = window.dieModule;
             engineReady = true;
             statusIndicator.textContent = '🚀';
-            statusText.textContent = i18n.t('wasm-ready');
+            window.setStatus('wasm-ready');
             statusIndicator.className = 'status-indicator wasm-active';
             console.log('完整 DIE WASM 已就绪');
             console.log('FS available:', dieModule.FS ? 'yes' : 'no');
@@ -40,7 +41,7 @@ async function initEngine() {
     } catch (error) {
         console.error('引擎初始化失败:', error);
         statusIndicator.textContent = '❌';
-        statusText.textContent = i18n.t('wasm-fail');
+        window.setStatus('wasm-fail');
         statusIndicator.className = 'status-indicator error';
         showError(i18n.t('wasm-error') + ': ' + error.message);
     }

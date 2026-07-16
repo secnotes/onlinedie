@@ -11,6 +11,8 @@
 
 **[Detect It Easy](https://github.com/horsicq/DIE-engine) compiled to WebAssembly, running entirely in the browser.**
 
+[English](README.md) | [中文](README_CN.md)
+
 </div>
 
 ## Features

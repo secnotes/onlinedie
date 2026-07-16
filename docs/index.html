@@ -50,7 +50,7 @@
             <p class="subtitle" data-i18n="subtitle">基于 DIE-engine WASM 的文件检测工具</p>
             <div class="engine-status" id="engineStatus">
                 <span class="status-indicator" id="statusIndicator">⏳</span>
-                <span id="statusText" data-i18n="loading">正在加载 WASM...</span>
+                <span id="statusText">正在加载 WASM...</span>
             </div>
         </header>
 
@@ -154,14 +154,26 @@
         // 全局输出缓冲区
         window.dieOutputBuffer = '';
 
+        // 当前状态 key（用于语言切换时重新翻译 statusText）
+        window.currentStatusKey = 'loading';
+        window.currentStatusDetail = '';
+
+        // 统一设置状态的辅助函数
+        window.setStatus = function(key, detail) {
+            window.currentStatusKey = key;
+            window.currentStatusDetail = detail || '';
+            const translated = i18n.t(key) || key;
+            document.getElementById('statusText').textContent =
+                detail ? `${translated}: ${detail}` : translated;
+        };
+
         window.dieWasmInit = async function() {
-            const statusText = document.getElementById('statusText');
             const statusIndicator = document.getElementById('statusIndicator');
             const errorDiv = document.getElementById('errorMessage');
             const errorText = document.getElementById('errorText');
 
             if (isLocalFile) {
-                statusText.textContent = i18n.t('local-mode');
+                window.setStatus('local-mode');
                 statusIndicator.textContent = '⚠️';
                 statusIndicator.className = 'status-indicator basic-active';
                 errorDiv.style.display = 'block';
@@ -192,6 +204,7 @@
                 return true;
             } catch (e) {
                 console.error('WASM 加载失败:', e);
+                window.setStatus('wasm-error', e.message);
                 errorDiv.style.display = 'block';
                 errorText.textContent = i18n.t('wasm-error') + ': ' + e.message;
                 return false;
@@ -272,6 +285,10 @@
                 });
                 // 更新语言切换按钮显示
                 document.getElementById('lang-toggle').textContent = lang === 'zh' ? 'EN' : '中';
+                // 用当前状态 key 重新渲染 statusText（处理非 loading 的状态）
+                if (window.setStatus && window.currentStatusKey && window.currentStatusKey !== 'loading') {
+                    window.setStatus(window.currentStatusKey, window.currentStatusDetail);
+                }
             }
         };
 

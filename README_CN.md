@@ -11,6 +11,8 @@
 
 **[Detect It Easy](https://github.com/horsicq/DIE-engine) 编译为 WebAssembly，完全在浏览器中运行。**
 
+[English](README.md) | [中文](README_CN.md)
+
 </div>
 
 ## 特性
